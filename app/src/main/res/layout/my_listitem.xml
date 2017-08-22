@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:duplicateParentState="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:id="@+id/MyListItem"
+    android:paddingBottom="3dip"
+    android:paddingLeft="5dip">
+
+    <ImageView
+        android:id="@+id/MusicDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="MusicDownloadOnClick"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/downloadicon" />
+
+    <TextView
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:id="@+id/MusicIndex">
+    </TextView>
+
+    <TextView
+        android:singleLine="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="50dp"
+        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/ItemTitle"
+        android:textColor="@drawable/software_textcolor"
+        android:textSize="16dip">
+    </TextView>
+    <TextView
+        android:singleLine="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="50dp"
+        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="22dp"
+        android:textSize="12dip"
+        android:divider="#e6e6e6"
+        android:textColor="@drawable/colorstext"
+        android:id="@+id/ItemText">
+    </TextView>
+
+</RelativeLayout>

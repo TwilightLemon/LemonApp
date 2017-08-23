@@ -20,7 +20,7 @@ public class StartPage extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        Integer time = 1000;
+        Integer time = 2000;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

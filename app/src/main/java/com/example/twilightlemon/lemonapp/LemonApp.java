@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -79,6 +80,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -131,7 +133,10 @@ public class LemonApp extends AppCompatActivity {
                     handler.postDelayed(runnable, 500);
                     mediaPlayer.stop();
                     mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
+                    File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+".m4a");
+                    if(f.exists())
+                        mediaPlayer.setDataSource(f.toString());
+                    else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
                     mediaPlayer.prepare();//缓冲
                     mediaPlayer.start();//开始或恢复播放
                 } catch (Exception e) {
@@ -275,17 +280,6 @@ public class LemonApp extends AppCompatActivity {
         }
 
     }
-    public static Bitmap createCircleImage(Bitmap source) {
-        int length = source.getWidth() < source.getHeight() ? source.getWidth() : source.getHeight();
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        Bitmap target = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(target);
-        canvas.drawCircle(length / 2, length / 2, length / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(source, 0, 0, paint);
-        return target;
-    }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -313,6 +307,7 @@ public class LemonApp extends AppCompatActivity {
 
     };
     ArrayList<String> MusicIDData=new ArrayList<String>();
+    String SDPATH="";
     ArrayList<String> MImageIDData=new ArrayList<String>();
     int MListSeleindex=0;
     ListView list;
@@ -374,16 +369,15 @@ public class LemonApp extends AppCompatActivity {
         int index= Integer.parseInt(((TextView)PATENT.findViewById(R.id.MusicIndex)).getText().toString());
         String downloadUrl="http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(index)+".m4a?fromtag=52";
         HashMap<String,String> map=(HashMap<String,String>)list.getItemAtPosition(index);
-        String name=map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a";
+        String name=(map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a").replace("\\","").replace("/","");
             DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
             DownloadManager.Request request = new
             DownloadManager.Request(Uri.parse(downloadUrl));
-            request.setDestinationInExternalPublicDir("Download", name);
+            request.setDestinationInExternalPublicDir("LemonApp/MusicDownload", name);
             request.setTitle(name);
             request.setDescription("小萌音乐正在下载中");
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-            long id = downloadManager.enqueue(request);
+            downloadManager.enqueue(request);
         sdm("正在下载:"+name);}catch(Exception e){SendMessageBox(e.getMessage());}
     }
     EditText RobotText;
@@ -425,6 +419,7 @@ public class LemonApp extends AppCompatActivity {
                 (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|
                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_lemon_app);
+        SDPATH = Environment.getExternalStorageDirectory().getPath() + "//";
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.reset();
         }
@@ -443,8 +438,32 @@ public class LemonApp extends AppCompatActivity {
 
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     public void onClick(DialogInterface dialog, int which) {
-                        try{((CircleImageView)findViewById(R.id.USERTX)).setImageBitmap(getHttpBitmap("http://q2.qlogo.cn/headimg_dl?bs=qq&dst_uin="+qq.getText().toString()+"&spec=100"));
-                        String name="";
+                        try{//((CircleImageView)findViewById(R.id.USERTX)).setImageBitmap(getHttpBitmap("http://q2.qlogo.cn/headimg_dl?bs=qq&dst_uin="+qq.getText().toString()+"&spec=100"));
+                            final File f=new File(SDPATH+"LemonApp/UserCache/"+qq.getText().toString()+".jpg");
+                            if(f.exists()){
+                                ((CircleImageView)findViewById(R.id.USERTX)).setImageBitmap(BitmapFactory.decodeFile(f.toString()));
+                            }else{
+                                final DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://q2.qlogo.cn/headimg_dl?bs=qq&dst_uin="+qq.getText().toString()+"&spec=100"));
+                                request.setDestinationInExternalPublicDir("LemonApp/UserCache",qq.getText().toString()+".jpg");
+                                final long id= downloadManager.enqueue(request);
+                                LemonApp.this.registerReceiver(new BroadcastReceiver() {
+                                                                   @Override
+                                                                   public void onReceive(Context context, Intent intent) {
+                                                                       DownloadManager.Query query = new DownloadManager.Query();
+                                                                       query.setFilterById(id);
+                                                                       Cursor c = downloadManager.query(query);
+                                                                       if (c.moveToFirst()) {
+                                                                           if(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))==DownloadManager.STATUS_SUCCESSFUL)
+                                                                           {
+                                                                               ((CircleImageView)findViewById(R.id.USERTX)).setImageBitmap(BitmapFactory.decodeFile(f.toString()));
+                                                                           }
+                                                                       }
+                                                                   }
+                                                               },
+                                        new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                            }
+                            String name="";
                             String json = HtmlService.getHtml("http://r.pengyou.com/fcg-bin/cgi_get_portrait.fcg?uins="+qq.getText().toString(),false).replace("portraitCallBack(","").replace(")","");
                             JSONObject jo=new JSONObject(json);
                             name=jo.getJSONArray(qq.getText().toString()).getString(6);
@@ -472,7 +491,7 @@ public class LemonApp extends AppCompatActivity {
                         JSONObject jo=new JSONObject(HtmlService.getHtml("http://www.tuling123.com/openapi/api?key=0651b32a3a6c8f54c7869b9e62872796&info=" + URLEncoder.encode(RobotText.getText().toString(),"utf-8")+"&userid="+sp.getString("qq", ""),true));
                         RTEXT.add(jo.getString("text"));
                         UTEXT.add(RobotText.getText().toString());
-                        ra = new RobotAdapter(LemonApp.this, RTEXT, UTEXT, getHttpBitmap("http://q2.qlogo.cn/headimg_dl?bs=qq&dst_uin=" + sp.getString("qq", "") + "&spec=100"), sp.getString("name", ""));
+                        ra = new RobotAdapter(LemonApp.this, RTEXT, UTEXT,BitmapFactory.decodeFile(SDPATH+"LemonApp/UserCache/"+sp.getString("qq", "")+".jpg"), sp.getString("name", ""));
                     }else {
                         JSONObject jo=new JSONObject(HtmlService.getHtml("http://www.tuling123.com/openapi/api?key=0651b32a3a6c8f54c7869b9e62872796&info=" + URLEncoder.encode(RobotText.getText().toString(),"utf-8"),true));
                         RTEXT.add(jo.getString("text"));
@@ -558,15 +577,14 @@ public class LemonApp extends AppCompatActivity {
                             protected Void doInBackground(String[]... params) {
                                 DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
                                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(params[0][0]));
-                                request.setDestinationInExternalPublicDir("Download", params[0][1]);
+                                request.setDestinationInExternalPublicDir("LemonApp/MusicDownload", params[0][1]);
                                 request.setTitle(params[0][1]);
                                 request.setDescription("小萌音乐正在下载中");
                                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
                                 downloadManager.enqueue(request);
                                 return null;
                             }
-                        }.execute(new String[]{"http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(i)+".m4a?fromtag=52",map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a"});
+                        }.execute(new String[]{"http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(i)+".m4a?fromtag=52",(map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a").replace("\\","").replace("/","")});
                     }
                 }
             }
@@ -637,7 +655,10 @@ public class LemonApp extends AppCompatActivity {
                 MListSeleindex=arg2;
                 mediaPlayer.stop();
                 mediaPlayer=new MediaPlayer();
-                mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(arg2)+".m4a?fromtag=52");
+                File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+".m4a");
+                if(f.exists())
+                    mediaPlayer.setDataSource(f.toString());
+                else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(arg2)+".m4a?fromtag=52");
                 mediaPlayer.prepare();//缓冲
                 mediaPlayer.start();//开始或恢复播放
                 }catch(Exception e){SendMessageBox(e.getMessage());}
@@ -647,12 +668,15 @@ public class LemonApp extends AppCompatActivity {
         SharedPreferences sp = LemonApp.this.getSharedPreferences("Cookie", Context.MODE_PRIVATE);
         if(sp.contains("name")) {
             ((TextView) findViewById(R.id.USERNAME)).setText(sp.getString("name", ""));
-            ((CircleImageView) findViewById(R.id.USERTX)).setImageBitmap(getHttpBitmap("http://q2.qlogo.cn/headimg_dl?bs=qq&dst_uin=" + sp.getString("qq", "") + "&spec=100"));
+            final File f=new File(SDPATH+"LemonApp/UserCache/"+sp.getString("qq", "")+".jpg");
+            if(f.exists()) {
+                ((CircleImageView) findViewById(R.id.USERTX)).setImageBitmap(BitmapFactory.decodeFile(f.toString()));
+            }
         }try{
             String data = HtmlService.getHtml("http://git.oschina.net/TwilightLemon/Updata/raw/master/AndroidUpdata.au",true);
             final Double v=Double.parseDouble(Text(data,"-","-",0,1));
             String c="       "+Text(data,"+","+",0,1).replace(".","\n");
-            if(1.0<v){
+            if(1.1<v){
                 final TextView tv=new TextView(this);
                 tv.setText("       新版本:"+v+"\n"+c);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(LemonApp.this);
@@ -661,14 +685,16 @@ public class LemonApp extends AppCompatActivity {
                 builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     public void onClick(DialogInterface dialog, int which) {
-                        final String name="LemonUpdata"+v+".apk";
+                        final String name="LemonUpdata.apk";
+                        File f=new File(SDPATH+"LemonApp/Cache/"+name);
+                        if(f.exists())
+                            f.delete();
                         final DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
                         DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://git.oschina.net/TwilightLemon/Updata/raw/master/LemonUpdata"+v+".apk"));
-                        request.setDestinationInExternalPublicDir("Download",name);
+                        request.setDestinationInExternalPublicDir("LemonApp/Cache",name);
                         request.setTitle(name);
                         request.setDescription("小萌更新包正在下载中");
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
                         final long id= downloadManager.enqueue(request);
                         LemonApp.this.registerReceiver(new BroadcastReceiver() {
                                                            @Override
@@ -680,7 +706,7 @@ public class LemonApp extends AppCompatActivity {
                                                                    if(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))==DownloadManager.STATUS_SUCCESSFUL)
                                                                    {
                                                                        Intent in = new Intent(Intent.ACTION_VIEW);
-                                                                       Uri uri = Uri.parse("file://Download/"+name);
+                                                                       Uri uri = Uri.parse("file://LemonApp/Cache/"+name);
                                                                        in.setDataAndType(uri, "application/vnd.android.package-archive");
                                                                        in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                        LemonApp.this.startActivity(in);
@@ -695,14 +721,54 @@ public class LemonApp extends AppCompatActivity {
             }
         }catch(Exception e){}
         try {
-            RelativeLayout UBG= (RelativeLayout) findViewById(R.id.UBG);
+            final RelativeLayout UBG= (RelativeLayout) findViewById(R.id.UBG);
             TextView PTX= (TextView) findViewById(R.id.PTX);
             JSONObject obj = new JSONObject(HtmlService.getHtml("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN",true));
             String url="http://cn.bing.com" +obj.getJSONArray("images").getJSONObject(0).getString("url");
-            PTX.setText(obj.getJSONArray("images").getJSONObject(0).getString("copyright"));
-            final Bitmap data=getHttpBitmap(url);
-            UBG.setBackground(new BitmapDrawable(data));
-        }catch(Exception e){SendMessageBox(e.getMessage());}
+            String ivt =obj.getJSONArray("images").getJSONObject(0).getString("copyright");
+            PTX.setText(ivt);
+            final String name=Text(url,"/az/hprichbg/rb/",".jpg",0,1)+".jpg";
+            SharedPreferences preferences = LemonApp.this.getSharedPreferences("Cookie", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("ivt",ivt);
+            editor.putString("ivn",name);
+            editor.commit();
+            File f=new File(SDPATH+"LemonApp/Cache/"+name);
+            if(f.exists()){
+                UBG.setBackground(BitmapDrawable.createFromPath(SDPATH+"LemonApp/Cache/"+name));
+            }else{
+                final DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                request.setDestinationInExternalPublicDir("LemonApp/Cache",name);
+                final long id= downloadManager.enqueue(request);
+                LemonApp.this.registerReceiver(new BroadcastReceiver() {
+                                                   @Override
+                                                   public void onReceive(Context context, Intent intent) {
+                                                       DownloadManager.Query query = new DownloadManager.Query();
+                                                       query.setFilterById(id);
+                                                       Cursor c = downloadManager.query(query);
+                                                       if (c.moveToFirst()) {
+                                                           if(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))==DownloadManager.STATUS_SUCCESSFUL)
+                                                           {
+                                                               UBG.setBackground(BitmapDrawable.createFromPath(SDPATH+"LemonApp/Cache/"+name));
+                                                           }
+                                                       }
+                                                   }
+                                               },
+                        new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            }
+        }catch(Exception e){
+            SharedPreferences sps = LemonApp.this.getSharedPreferences("Cookie", Context.MODE_PRIVATE);
+            File f=new File(SDPATH+"LemonApp/Cache/"+sps.getString("ivn",""));
+            if(f.exists()){
+                if(sps.contains("ivt")){
+                RelativeLayout UBG= (RelativeLayout) findViewById(R.id.UBG);
+                TextView PTX= (TextView) findViewById(R.id.PTX);
+                UBG.setBackground(BitmapDrawable.createFromPath(f.toString()));
+                PTX.setText(sps.getString("ivt",""));
+                }
+            }
+        }
         //SendMessageBox(sp.getString("name","")+"\n"+sp.getString("qq",""));
     }
 }

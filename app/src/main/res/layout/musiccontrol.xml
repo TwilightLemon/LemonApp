@@ -8,13 +8,13 @@
     <RelativeLayout
         android:id="@+id/MImage"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="380dp"
         android:background="#FFFFFF">
 
     <RelativeLayout
         android:id="@+id/MImageBackground"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="380dp"
         android:background="#46000000"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -22,8 +22,8 @@
         <com.example.twilightlemon.lemonapp.LrcView
             android:id="@+id/lrc"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            app:lrcAnimationDuration="1000"
+            android:layout_height="330dp"
+            app:lrcAnimationDuration="500"
             app:lrcCurrentTextColor="?attr/colorPrimary"
             app:lrcDividerHeight="24dp"
             app:lrcLabel="小萌音乐"

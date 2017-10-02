@@ -510,8 +510,13 @@ public class LemonApp extends AppCompatActivity {
                     EditText dt=(EditText) findViewById(R.id.music_search);
                     String ID=dt.getText().toString();
                     try{
-                        HttpGet httpRequest = new HttpGet("https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&disstid="+ID+"&format=json&g_tk=5381&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0");
-                        HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
+                        HttpGet httpRequest = new HttpGet("https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&disstid="+ID+"&format=json&g_tk=1157737156&loginUin=2728578956&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0");
+                        httpRequest.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.110 Safari/537.36");
+                        httpRequest.setHeader("Accept", "*/*");
+                        httpRequest.setHeader("Referer", "https://y.qq.com/portal/player.html");
+                        httpRequest.setHeader("Cookie", "pgv_pvi=1693112320; RK=DKOGai2+wu; pgv_pvid=1804673584; ptcz=3a23e0a915ddf05c5addbede97812033b60be2a192f7c3ecb41aa0d60912ff26; pgv_si=s4366031872; _qpsvr_localtk=0.3782697029073365; ptisp=ctc; luin=o2728578956; lskey=00010000863c7a430b79e2cf0263ff24a1e97b0694ad14fcee720a1dc16ccba0717d728d32fcadda6c1109ff; pt2gguin=o2728578956; uin=o2728578956; skey=@PjlklcXgw; p_uin=o2728578956; p_skey=ROnI4JEkWgKYtgppi3CnVTETY3aHAIes-2eDPfGQcVg_; pt4_token=wC-2b7WFwI*8aKZBjbBb7f4Am4rskj11MmN7bvuacJQ_; p_luin=o2728578956; p_lskey=00040000e56d131f47948fb5a2bec49de6174d7938c2eb45cb224af316b053543412fd9393f83ee26a451e15; ts_refer=ui.ptlogin2.qq.com/cgi-bin/login; ts_last=y.qq.com/n/yqq/playlist/2591355982.html; ts_uid=1420532256; yqq_stat=0");
+                        httpRequest.setHeader("Host", "c.y.qq.com");
+						HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
                         if(httpResponse.getStatusLine().getStatusCode() == 200){
                             String json = EntityUtils.toString(httpResponse.getEntity());
                             JSONObject jo = new JSONObject(json);
@@ -676,7 +681,7 @@ public class LemonApp extends AppCompatActivity {
             String data = HtmlService.getHtml("http://git.oschina.net/TwilightLemon/Updata/raw/master/AndroidUpdata.au",true);
             final Double v=Double.parseDouble(Text(data,"-","-",0,1));
             String c="       "+Text(data,"+","+",0,1).replace(".","\n");
-            if(1.1<v){
+            if(1.2<v){
                 final TextView tv=new TextView(this);
                 tv.setText("       新版本:"+v+"\n"+c);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(LemonApp.this);

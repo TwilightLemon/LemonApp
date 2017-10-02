@@ -102,7 +102,9 @@ import static android.graphics.Color.parseColor;
 
 public class LemonApp extends AppCompatActivity {
     MediaPlayer mediaPlayer = new MediaPlayer();
+    final int[] d_music_isplay = {0};
     private LrcView lrcBig;
+    final int[] xhindex = {0};//0=lbxh 1=dqxh
     private Handler handler = new Handler( );
     private Runnable runnable = new Runnable( ) {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -111,7 +113,8 @@ public class LemonApp extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "UUUUHHHMM",
                         Toast.LENGTH_SHORT).show();
                 handler.removeCallbacks(runnable);
-                MListSeleindex++;
+                if(xhindex[0]==0)
+                   MListSeleindex++;
                 list.setItemChecked(MListSeleindex, true);
                 //获得选中项的HashMap对象
                 MseekBar.setProgress(0);
@@ -119,8 +122,10 @@ public class LemonApp extends AppCompatActivity {
                 HashMap<String, String> map = (HashMap<String, String>) list.getItemAtPosition(MListSeleindex);
                 String title = map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","");
                 String content = map.get("ItemText");
-                MusicText.setText(title + "-" + content);
-                MButton.setText("暂停");
+                MusicText.setText(title);
+                MusicTextGC.setText(content);
+                MButton.setImageResource(R.drawable.ic_music_open);
+                d_music_isplay[0]=1;
                 MseekBar.setMax(mediaPlayer.getDuration());
                 try {
                     GetMusicLyric(MusicIDData.get(MListSeleindex));
@@ -129,11 +134,11 @@ public class LemonApp extends AppCompatActivity {
                     conn.connect();
                     InputStream in = conn.getInputStream();
                     Bitmap bmp = BitmapFactory.decodeStream(in);
-                    MImage.setBackground(new BitmapDrawable(bmp));
+                    MImage.setImageBitmap(bmp);
                     handler.postDelayed(runnable, 500);
                     mediaPlayer.stop();
                     mediaPlayer = new MediaPlayer();
-                    File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+".m4a");
+                    File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
                     if(f.exists())
                         mediaPlayer.setDataSource(f.toString());
                     else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
@@ -312,9 +317,10 @@ public class LemonApp extends AppCompatActivity {
     int MListSeleindex=0;
     ListView list;
     TextView MusicText;
-    Button MButton;
+    TextView MusicTextGC;
+    ImageButton MButton;
     SeekBar MseekBar;
-    RelativeLayout MImage;
+    CircleImageView MImage;
     private void SearchMusic(String text){
         try{
             String url="http://59.37.96.220/soso/fcgi-bin/client_search_cp?format=json&t=0&inCharset=GB2312&outCharset=utf-8&qqmusic_ver=1302&catZhida=0&p=1&n=20&w="+ URLEncoder.encode(text, "utf-8")+"&flag_qc=0&remoteplace=sizer.newclient.song&new_json=1&lossless=0&aggr=1&cr=1&sem=0&force_zonghe=0";
@@ -426,6 +432,86 @@ public class LemonApp extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        findViewById(R.id.musicnexts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "UUUUHHHMM",
+                        Toast.LENGTH_SHORT).show();
+                handler.removeCallbacks(runnable);
+                MListSeleindex--;
+                list.setItemChecked(MListSeleindex, true);
+                //获得选中项的HashMap对象
+                MseekBar.setProgress(0);
+                lrcBig.updateTime(0);
+                HashMap<String, String> map = (HashMap<String, String>) list.getItemAtPosition(MListSeleindex);
+                String title = map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","");
+                String content = map.get("ItemText");
+                MusicText.setText(title);
+                MusicTextGC.setText(content);
+                MButton.setImageResource(R.drawable.ic_music_open);
+                d_music_isplay[0]=1;
+                MseekBar.setMax(mediaPlayer.getDuration());
+                try {
+                    GetMusicLyric(MusicIDData.get(MListSeleindex));
+                    URL url = new URL("http://y.gtimg.cn/music/photo_new/T002R300x300M000" + MImageIDData.get(MListSeleindex) + ".jpg");
+                    URLConnection conn = url.openConnection();
+                    conn.connect();
+                    InputStream in = conn.getInputStream();
+                    Bitmap bmp = BitmapFactory.decodeStream(in);
+                    MImage.setImageBitmap(bmp);
+                    handler.postDelayed(runnable, 500);
+                    mediaPlayer.stop();
+                    mediaPlayer = new MediaPlayer();
+                    File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
+                    if(f.exists())
+                        mediaPlayer.setDataSource(f.toString());
+                    else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
+                    mediaPlayer.prepare();//缓冲
+                    mediaPlayer.start();//开始或恢复播放
+                } catch (Exception e) {
+                }
+            }
+        });
+        findViewById(R.id.musicnext).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "UUUUHHHMM",
+                        Toast.LENGTH_SHORT).show();
+                handler.removeCallbacks(runnable);
+                MListSeleindex++;
+                list.setItemChecked(MListSeleindex, true);
+                //获得选中项的HashMap对象
+                MseekBar.setProgress(0);
+                lrcBig.updateTime(0);
+                HashMap<String, String> map = (HashMap<String, String>) list.getItemAtPosition(MListSeleindex);
+                String title = map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","");
+                String content = map.get("ItemText");
+                MusicText.setText(title);
+                MusicTextGC.setText(content);
+                MButton.setImageResource(R.drawable.ic_music_open);
+                d_music_isplay[0]=1;
+                MseekBar.setMax(mediaPlayer.getDuration());
+                try {
+                    GetMusicLyric(MusicIDData.get(MListSeleindex));
+                    URL url = new URL("http://y.gtimg.cn/music/photo_new/T002R300x300M000" + MImageIDData.get(MListSeleindex) + ".jpg");
+                    URLConnection conn = url.openConnection();
+                    conn.connect();
+                    InputStream in = conn.getInputStream();
+                    Bitmap bmp = BitmapFactory.decodeStream(in);
+                    MImage.setImageBitmap(bmp);
+                    handler.postDelayed(runnable, 500);
+                    mediaPlayer.stop();
+                    mediaPlayer = new MediaPlayer();
+                    File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
+                    if(f.exists())
+                        mediaPlayer.setDataSource(f.toString());
+                    else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
+                    mediaPlayer.prepare();//缓冲
+                    mediaPlayer.start();//开始或恢复播放
+                } catch (Exception e) {
+                }
+            }
+        });
         findViewById(R.id.USERNAME).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -564,10 +650,35 @@ public class LemonApp extends AppCompatActivity {
             }
         });
         lrcBig = (LrcView) findViewById(R.id.lrc);
+        MusicTextGC= (TextView) findViewById(R.id.MusicTextGC);
         MusicText= (TextView) findViewById(R.id.MusicText);
-        MButton = (Button) findViewById(R.id.MButton);
+        MButton = (ImageButton) findViewById(R.id.MButton);
         MseekBar= (SeekBar) findViewById(R.id.MusicSeek);
-        MImage = (RelativeLayout) findViewById(R.id.MImage);
+        MImage = (CircleImageView) findViewById(R.id.MUSICZJ);
+        findViewById(R.id.musiclb).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findViewById(R.id.MSearch).setVisibility(View.VISIBLE);
+            }
+        });
+        findViewById(R.id.MSearchTouchBar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findViewById(R.id.MSearch).setVisibility(View.GONE);
+            }
+        });
+        final ImageButton musicxh= (ImageButton) findViewById(R.id.musicxh);musicxh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(xhindex[0] ==0){
+                    xhindex[0] =1;
+                    musicxh.setImageResource(R.drawable.ic_musicdq);
+                }else{
+                    xhindex[0]=0;
+                    musicxh.setImageResource(R.drawable.ic_musiclb);
+                }
+            }
+        });
         getSupportActionBar().hide();
         findViewById(R.id.MDownloadALL).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -617,9 +728,11 @@ public class LemonApp extends AppCompatActivity {
         MButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(MButton.getText()=="暂停")
-                {handler.removeCallbacks(runnable);MButton.setText("播放");mediaPlayer.pause();}
-                else{handler.postDelayed(runnable,1000);MButton.setText("暂停");mediaPlayer.start();}
+                if(d_music_isplay[0] ==1)
+                {handler.removeCallbacks(runnable);MButton.setImageResource(R.drawable.ic_music_close);mediaPlayer.pause();
+                    d_music_isplay[0] =0;}
+                else{handler.postDelayed(runnable,1000);MButton.setImageResource(R.drawable.ic_music_open);mediaPlayer.start();
+                    d_music_isplay[0] =1;}
             }
         });
       //  list.setDividerHeight(1);
@@ -638,6 +751,7 @@ public class LemonApp extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
+                findViewById(R.id.MSearch).setVisibility(View.GONE);
                 //获得选中项的HashMap对象
                 handler.removeCallbacks(runnable);
                 MseekBar.setProgress(0);
@@ -645,8 +759,10 @@ public class LemonApp extends AppCompatActivity {
                 HashMap<String,String> map=(HashMap<String,String>)list.getItemAtPosition(arg2);
                 String title = map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","");
                 String content=map.get("ItemText");
-                MusicText.setText(title+"-"+content);
-                MButton.setText("暂停");
+                MusicText.setText(title);
+                MusicTextGC.setText(content);
+                MButton.setImageResource(R.drawable.ic_music_open);
+                d_music_isplay[0]=1;
                 MseekBar.setMax(mediaPlayer.getDuration());
                 try{
                 GetMusicLyric(MusicIDData.get(arg2));
@@ -655,12 +771,12 @@ public class LemonApp extends AppCompatActivity {
                 conn.connect();
                 InputStream in = conn.getInputStream();
                 Bitmap bmp = BitmapFactory.decodeStream(in);
-                MImage.setBackground(new BitmapDrawable(bmp));
+                    MImage.setImageBitmap(bmp);
                 handler.postDelayed(runnable,500);
                 MListSeleindex=arg2;
                 mediaPlayer.stop();
                 mediaPlayer=new MediaPlayer();
-                File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+".m4a");
+                File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
                 if(f.exists())
                     mediaPlayer.setDataSource(f.toString());
                 else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(arg2)+".m4a?fromtag=52");

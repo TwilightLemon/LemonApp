@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-
+    android:weightSum="1">
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/MImage"
+        android:layout_marginBottom="80dp"
         android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:background="#FFFFFF">
-
-    <RelativeLayout
-        android:id="@+id/MImageBackground"
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:background="#46000000"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true">
+
+        <com.example.twilightlemon.lemonapp.CircleImageView
+            android:id="@+id/MUSICZJ"
+            android:layout_width="215dp"
+            android:layout_height="215dp"
+            android:src="@mipmap/icon"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/MusicTextGC"
+            android:layout_centerHorizontal="true" />
+
         <com.example.twilightlemon.lemonapp.LrcView
             android:id="@+id/lrc"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="310dp"
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="match_parent"
             app:lrcAnimationDuration="500"
             app:lrcCurrentTextColor="?attr/colorPrimary"
             app:lrcDividerHeight="24dp"
             app:lrcLabel="小萌音乐"
-            app:lrcNormalTextColor="#FFFFFF"
+            app:lrcNormalTextColor="#46000000"
             app:lrcPadding="16dp"
             app:lrcTextSize="16sp" />
 
@@ -35,15 +42,38 @@
             android:id="@+id/MusicText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="18dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="80dp"
             android:ellipsize="end"
             android:singleLine="true"
+            android:gravity="center"
+            android:text="小萌音乐"
+            android:textColor="#84000000"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/MusicTextGC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="center"
             android:text="音乐"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp" />
+            android:textColor="#84000000"
+            android:textSize="16dp"
+            android:layout_marginTop="45dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="80dp">
 
         <SeekBar
             android:id="@+id/MusicSeek"
@@ -51,75 +81,152 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_marginBottom="60dp" />
 
-        <Button
-            android:id="@+id/MButton"
-            android:background="#00FFFFFF"
-            android:textColor="#FFFFFF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+        <ImageButton
+            android:id="@+id/musiclb"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@+id/MButton"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="播放"
-            android:layout_below="@+id/lrc" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="21dp"
+            android:layout_marginRight="21dp"
+            android:background="#00000000"
+            app:srcCompat="@drawable/ic_musicplay" />
 
+        <ImageButton
+            android:id="@+id/musicxh"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/MButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="21dp"
+            android:layout_marginStart="21dp"
+            android:background="#00000000"
+            app:srcCompat="@drawable/ic_musiclb" />
+
+        <ImageButton
+            android:id="@+id/musicnexts"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/MButton"
+            android:layout_marginBottom="7dp"
+            android:layout_marginEnd="31dp"
+            android:layout_marginRight="31dp"
+            android:layout_toLeftOf="@+id/MButton"
+            android:layout_toStartOf="@+id/MButton"
+            android:background="#00000000"
+            app:srcCompat="@drawable/ic_musicnexts" />
+
+        <ImageButton
+            android:id="@+id/musicnext"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/MButton"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_toEndOf="@+id/MButton"
+            android:layout_toRightOf="@+id/MButton"
+            android:background="#00000000"
+            app:srcCompat="@drawable/ic_musicnext" />
+
+        <ImageButton
+            android:id="@+id/MButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:background="#00000000"
+            app:srcCompat="@drawable/ic_music_close" />
     </RelativeLayout>
+     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/MSearch"
         android:layout_width="match_parent"
-        android:layout_height="36dp">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <ImageButton
-            android:id="@+id/MGDButton"
-            android:layout_width="wrap_content"
-            android:onClick="MusicDownloadOnClick"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="6dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="#FAFAFA"
-            app:srcCompat="@drawable/s" />
+        <RelativeLayout
+            android:id="@+id/MSearchTouchBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF" />
 
-        <ImageButton
-            android:id="@+id/MDownloadALL"
-            android:layout_width="wrap_content"
-            android:onClick="MusicDownloadOnClick"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentTop="true"
-            android:background="#FAFAFA"
-            app:srcCompat="@drawable/downloadicon" />
-
-        <EditText
-            android:id="@+id/music_search"
-            android:layout_width="fill_parent"
-            android:layout_height="36dip"
+        <RelativeLayout
+            android:id="@+id/MSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:hint="搜索"
-            android:imeOptions="actionDone"
-            android:padding="5dip"
-            android:singleLine="true"
-            android:textColorHint="#AAAAAA"
-            android:textSize="15dip"
-            android:layout_toLeftOf="@+id/MGDButton"
-            android:layout_toStartOf="@+id/MGDButton" />
-    </RelativeLayout>
+            android:background="#FFFFFF"
+            android:visibility="visible">
 
-    <ListView
-        android:id="@+id/music_List"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:choiceMode="singleChoice"
-        android:clickable="true"
-        android:focusable="true" />
-</LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:visibility="visible">
+
+                <ImageButton
+                    android:id="@+id/MGDButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="45dp"
+                    android:layout_marginTop="6dp"
+                    android:background="#FAFAFA"
+                    android:onClick="MusicDownloadOnClick"
+                    app:srcCompat="@drawable/s" />
+
+                <ImageButton
+                    android:id="@+id/MDownloadALL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="6dp"
+                    android:background="#FAFAFA"
+                    android:onClick="MusicDownloadOnClick"
+                    app:srcCompat="@drawable/downloadicon" />
+
+                <EditText
+                    android:id="@+id/music_search"
+                    android:layout_width="fill_parent"
+                    android:layout_height="36dip"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/MGDButton"
+                    android:layout_toStartOf="@+id/MGDButton"
+                    android:hint="搜索"
+                    android:imeOptions="actionDone"
+                    android:padding="5dip"
+                    android:singleLine="true"
+                    android:textColorHint="#AAAAAA"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/music_List"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                android:choiceMode="singleChoice"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

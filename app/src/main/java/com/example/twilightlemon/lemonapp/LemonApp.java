@@ -1,4 +1,8 @@
 package com.example.twilightlemon.lemonapp;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -16,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -43,12 +48,16 @@ import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
@@ -102,6 +111,7 @@ import static android.graphics.Color.parseColor;
 
 public class LemonApp extends AppCompatActivity {
     MediaPlayer mediaPlayer = new MediaPlayer();
+    private ObjectAnimator mCircleAnimator;
     final int[] d_music_isplay = {0};
     private LrcView lrcBig;
     final int[] xhindex = {0};//0=lbxh 1=dqxh
@@ -665,12 +675,21 @@ public class LemonApp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 findViewById(R.id.MSearch).setVisibility(View.VISIBLE);
+                View vHead = findViewById(R.id.MSearchBar);
+                AnimatorUtil.animHeightToView(null,vHead, 0, 900,150);
             }
         });
         findViewById(R.id.MSearchTouchBar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                findViewById(R.id.MSearch).setVisibility(View.GONE);
+                View vHead = findViewById(R.id.MSearchBar);
+                AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        findViewById(R.id.MSearch).setVisibility(View.GONE);
+                        super.onAnimationEnd(animation);
+                    }
+                }, vHead, 900, 0, 150);
             }
         });
         final ImageButton musicxh= (ImageButton) findViewById(R.id.musicxh);musicxh.setOnClickListener(new View.OnClickListener() {
@@ -732,12 +751,13 @@ public class LemonApp extends AppCompatActivity {
             }
         });
         MButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
                 if(d_music_isplay[0] ==1)
-                {handler.removeCallbacks(runnable);MButton.setImageResource(R.drawable.ic_music_close);mediaPlayer.pause();
+                {handler.removeCallbacks(runnable);MButton.setImageResource(R.drawable.ic_music_close);mediaPlayer.pause();mCircleAnimator.pause();
                     d_music_isplay[0] =0;}
-                else{handler.postDelayed(runnable,1000);MButton.setImageResource(R.drawable.ic_music_open);mediaPlayer.start();
+                else{handler.postDelayed(runnable,1000);MButton.setImageResource(R.drawable.ic_music_open);mediaPlayer.start();mCircleAnimator.resume();
                     d_music_isplay[0] =1;}
             }
         });
@@ -755,40 +775,54 @@ public class LemonApp extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+            public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2,
                                     long arg3) {
-                findViewById(R.id.MSearch).setVisibility(View.GONE);
-                //获得选中项的HashMap对象
-                handler.removeCallbacks(runnable);
-                MseekBar.setProgress(0);
-                lrcBig.updateTime(0);
-                HashMap<String,String> map=(HashMap<String,String>)list.getItemAtPosition(arg2);
-                String title = map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","");
-                String content=map.get("ItemText");
-                MusicText.setText(title);
-                MusicTextGC.setText(content);
-                MButton.setImageResource(R.drawable.ic_music_open);
-                d_music_isplay[0]=1;
-                MseekBar.setMax(mediaPlayer.getDuration());
-                try{
-                GetMusicLyric(MusicIDData.get(arg2));
-                URL url = new URL("http://y.gtimg.cn/music/photo_new/T002R500x500M000"+MImageIDData.get(arg2)+".jpg");
-                URLConnection conn = url.openConnection();
-                conn.connect();
-                InputStream in = conn.getInputStream();
-                Bitmap bmp = BitmapFactory.decodeStream(in);
-                    MImage.setImageBitmap(bmp);
-                handler.postDelayed(runnable,500);
-                MListSeleindex=arg2;
-                mediaPlayer.stop();
-                mediaPlayer=new MediaPlayer();
-                File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
-                if(f.exists())
-                    mediaPlayer.setDataSource(f.toString());
-                else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(arg2)+".m4a?fromtag=52");
-                mediaPlayer.prepare();//缓冲
-                mediaPlayer.start();//开始或恢复播放
-                }catch(Exception e){SendMessageBox(e.getMessage());}
+                View vHead = findViewById(R.id.MSearchBar);
+                AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        findViewById(R.id.MSearch).setVisibility(View.GONE);
+                        //获得选中项的HashMap对象
+                        handler.removeCallbacks(runnable);
+                        MseekBar.setProgress(0);
+                        lrcBig.updateTime(0);
+                        HashMap<String,String> map=(HashMap<String,String>)list.getItemAtPosition(arg2);
+                        String title = map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","");
+                        String content=map.get("ItemText");
+                        MusicText.setText(title);
+                        MusicTextGC.setText(content);
+                        MButton.setImageResource(R.drawable.ic_music_open);
+                        d_music_isplay[0]=1;
+                        MseekBar.setMax(mediaPlayer.getDuration());
+                        try{
+                            GetMusicLyric(MusicIDData.get(arg2));
+                            URL url = new URL("http://y.gtimg.cn/music/photo_new/T002R500x500M000"+MImageIDData.get(arg2)+".jpg");
+                            URLConnection conn = url.openConnection();
+                            conn.connect();
+                            InputStream in = conn.getInputStream();
+                            Bitmap bmp = BitmapFactory.decodeStream(in);
+                            MImage.setImageBitmap(bmp);
+                            handler.postDelayed(runnable,500);
+                            MListSeleindex=arg2;
+                            mediaPlayer.stop();
+                            mediaPlayer=new MediaPlayer();
+                            File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
+                            if(f.exists())
+                                mediaPlayer.setDataSource(f.toString());
+                            else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(arg2)+".m4a?fromtag=52");
+                            mediaPlayer.prepare();//缓冲
+                            mediaPlayer.start();//开始或恢复播放
+                        }catch(Exception e){SendMessageBox(e.getMessage());}
+
+                        mCircleAnimator = ObjectAnimator.ofFloat(MImage, "rotation", 0.0f, 360.0f);
+                        mCircleAnimator.setDuration(6000);
+                        mCircleAnimator.setInterpolator(new LinearInterpolator());
+                        mCircleAnimator.setRepeatCount(-1);
+                        mCircleAnimator.setRepeatMode(ObjectAnimator.RESTART);
+                        super.onAnimationEnd(animation);
+                        mCircleAnimator.start();
+                    }
+                }, vHead, 900, 0, 150);
             }
 
         });
@@ -899,3 +933,4 @@ public class LemonApp extends AppCompatActivity {
         //SendMessageBox(sp.getString("name","")+"\n"+sp.getString("qq",""));
     }
 }
+

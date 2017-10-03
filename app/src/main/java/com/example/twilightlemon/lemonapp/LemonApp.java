@@ -184,41 +184,46 @@ public class LemonApp extends AppCompatActivity {
            // SendMessageBox(lyricdata +transdata);
             ArrayList<String> datatimes=new ArrayList<String>();
             ArrayList<String> datatexs=new ArrayList<String>();
+            HashMap<String,String> gcdata=new HashMap<String, String>();
             String[] dt=lyricdata.split("[\n]");
             for (String x:dt) {
-              parserLine(x,datatimes,datatexs);
+              parserLine(x,datatimes,datatexs,gcdata);
             }
             //sdm("d1");
             ArrayList<String> dataatimes=new ArrayList<String>();
             ArrayList<String> dataatexs=new ArrayList<String>();
+            HashMap<String,String> fydata=new HashMap<String, String>();
             String[] dta=transdata.split("[\n]");
             for (String x:dta) {
-               parserLine(x,dataatimes,dataatexs);
+               parserLine(x,dataatimes,dataatexs,fydata);
             }
               //  sdm("d2");
             ArrayList<String> KEY=new ArrayList<String>();
-            ArrayList<String> VALUE=new ArrayList<String>();
+            HashMap<String,String> gcfydata=new HashMap<String, String>();
             List<LrcEntry> list=new ArrayList<>();
             for (String x:datatimes) {
                 KEY.add(x);
+                gcfydata.put(x,"");
             }
                 //sdm("d3");
             for (String x:dataatimes) {
-                if(!KEY.contains(x))
+                if(!KEY.contains(x)){
                   KEY.add(x);
+                  gcfydata.put(x,"");
+                }
             }
                 //sdm("d4");
-            for(int i=0;i!=dataatimes.size();i++){
+            for(int i=0;i!=gcfydata.size();i++){
                 try{
-                String dsta=datatexs.get(i)+"^"+dataatexs.get(i);
-                VALUE.add(dsta);}catch(Exception e){}
+                    gcfydata.put(KEY.get(i),gcdata.get(KEY.get(i))+"^"+fydata.get(KEY.get(i)));
+                }catch(Exception e){}
             }
                 //sdm("d5   "+dataatexs.size()+"   "+dataatimes.size()+"   "+datatexs.size()+"   "+datatimes.size()+"   "+KEY.size());
             for(int i=0;i!=KEY.size();i++){
                 try{
                     long key=strToTime(KEY.get(i));
-                    String value =VALUE.get(i);
-                    list.add(new LrcEntry(key,value.replace("^","\n").replace("//","")));
+                    String value =gcfydata.get(KEY.get(i));
+                    list.add(new LrcEntry(key,value.replace("^","\n").replace("//","").replace("null","") ));
             }catch(Exception e){}
             }
             lrcBig.reset();
@@ -253,7 +258,7 @@ public class LemonApp extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), m,
                 Toast.LENGTH_SHORT).show();
     }
-    public String parserLine(String str,ArrayList<String> times,ArrayList<String>texs){
+    public String parserLine(String str,ArrayList<String> times,ArrayList<String>texs,HashMap<String,String> data){
         if (!str.startsWith("[ti:")&&!str.startsWith("[ar:")&&!str.startsWith("[al:")&&!str.startsWith("[by:")&&!str.startsWith("[offset:")){
             String TimeData=Text(str,"[","]",0,0)+"0";
             times.add(TimeData);
@@ -261,6 +266,7 @@ public class LemonApp extends AppCompatActivity {
             String io="["+INFO+"]";
             String TexsData=str.replace(io,"");
             texs.add(TexsData);
+            data.put(TimeData,TexsData);
             return TimeData+"     "+TexsData;
         }else return "";
     }

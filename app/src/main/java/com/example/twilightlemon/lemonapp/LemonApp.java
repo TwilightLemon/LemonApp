@@ -145,6 +145,10 @@ public class LemonApp extends AppCompatActivity {
                     InputStream in = conn.getInputStream();
                     Bitmap bmp = BitmapFactory.decodeStream(in);
                     MImage.setImageBitmap(bmp);
+                    RelativeLayout MImageBackground= (RelativeLayout) findViewById(R.id.MImageBackground);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        MImageBackground.setBackground(new BitmapDrawable(BlurBitmap.blur(LemonApp.this,bmp)));
+                    }
                     handler.postDelayed(runnable, 500);
                     mediaPlayer.stop();
                     mediaPlayer = new MediaPlayer();
@@ -301,32 +305,6 @@ public class LemonApp extends AppCompatActivity {
         }
 
     }
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    findViewById(R.id.MinePage).setVisibility(View.GONE);
-                    findViewById(R.id.RobotPage).setVisibility(View.GONE);
-                    findViewById(R.id.MusicPage).setVisibility(View.VISIBLE);
-                    return true;
-                case R.id.navigation_dashboard:
-                    findViewById(R.id.MinePage).setVisibility(View.GONE);
-                    findViewById(R.id.RobotPage).setVisibility(View.VISIBLE);
-                    findViewById(R.id.MusicPage).setVisibility(View.GONE);
-                    return true;
-                case R.id.navigation_notifications:
-                    findViewById(R.id.MinePage).setVisibility(View.VISIBLE);
-                    findViewById(R.id.RobotPage).setVisibility(View.GONE);
-                    findViewById(R.id.MusicPage).setVisibility(View.GONE);
-                    return true;
-            }
-            return false;
-        }
-
-    };
     ArrayList<String> MusicIDData=new ArrayList<String>();
     String SDPATH="";
     ArrayList<String> MImageIDData=new ArrayList<String>();
@@ -449,6 +427,7 @@ public class LemonApp extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         findViewById(R.id.musicnexts).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "UUUUHHHMM",
@@ -475,6 +454,8 @@ public class LemonApp extends AppCompatActivity {
                     InputStream in = conn.getInputStream();
                     Bitmap bmp = BitmapFactory.decodeStream(in);
                     MImage.setImageBitmap(bmp);
+                    RelativeLayout MImageBackground= (RelativeLayout) findViewById(R.id.MImageBackground);
+                    MImageBackground.setBackground(new BitmapDrawable(BlurBitmap.blur(LemonApp.this,bmp)));
                     handler.postDelayed(runnable, 500);
                     mediaPlayer.stop();
                     mediaPlayer = new MediaPlayer();
@@ -489,6 +470,7 @@ public class LemonApp extends AppCompatActivity {
             }
         });
         findViewById(R.id.musicnext).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "UUUUHHHMM",
@@ -515,6 +497,8 @@ public class LemonApp extends AppCompatActivity {
                     InputStream in = conn.getInputStream();
                     Bitmap bmp = BitmapFactory.decodeStream(in);
                     MImage.setImageBitmap(bmp);
+                    RelativeLayout MImageBackground= (RelativeLayout) findViewById(R.id.MImageBackground);
+                    MImageBackground.setBackground(new BitmapDrawable(BlurBitmap.blur(LemonApp.this,bmp)));
                     handler.postDelayed(runnable, 500);
                     mediaPlayer.stop();
                     mediaPlayer = new MediaPlayer();
@@ -671,6 +655,7 @@ public class LemonApp extends AppCompatActivity {
         MButton = (ImageButton) findViewById(R.id.MButton);
         MseekBar= (SeekBar) findViewById(R.id.MusicSeek);
         MImage = (CircleImageView) findViewById(R.id.MUSICZJ);
+
         findViewById(R.id.musiclb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -731,8 +716,6 @@ public class LemonApp extends AppCompatActivity {
             }
         });
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         MseekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -779,6 +762,7 @@ public class LemonApp extends AppCompatActivity {
                                     long arg3) {
                 View vHead = findViewById(R.id.MSearchBar);
                 AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         findViewById(R.id.MSearch).setVisibility(View.GONE);
@@ -802,6 +786,8 @@ public class LemonApp extends AppCompatActivity {
                             InputStream in = conn.getInputStream();
                             Bitmap bmp = BitmapFactory.decodeStream(in);
                             MImage.setImageBitmap(bmp);
+                            RelativeLayout MImageBackground= (RelativeLayout) findViewById(R.id.MImageBackground);
+                            MImageBackground.setBackground(new BitmapDrawable(BlurBitmap.blur(LemonApp.this,bmp)));
                             handler.postDelayed(runnable,500);
                             MListSeleindex=arg2;
                             mediaPlayer.stop();
@@ -837,7 +823,7 @@ public class LemonApp extends AppCompatActivity {
             String data = HtmlService.getHtml("http://git.oschina.net/TwilightLemon/Updata/raw/master/AndroidUpdata.au",true);
             final Double v=Double.parseDouble(Text(data,"-","-",0,1));
             String c="       "+Text(data,"+","+",0,1).replace(".","\n");
-            if(1.2<v){
+            if(1.3<v){
                 final TextView tv=new TextView(this);
                 tv.setText("       新版本:"+v+"\n"+c);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(LemonApp.this);
@@ -881,6 +867,71 @@ public class LemonApp extends AppCompatActivity {
                 builder.show();
             }
         }catch(Exception e){}
+        findViewById(R.id.userem).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int height=findViewById(R.id.MusicPage).getHeight();
+                sdm(height+"");
+                AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        findViewById(R.id.MusicPage).setVisibility(View.GONE);
+                        findViewById(R.id.RobotPage).setVisibility(View.GONE);
+                        findViewById(R.id.MinePage).setVisibility(View.VISIBLE);
+                        AnimatorUtil.animHeightToView(null, findViewById(R.id.MinePage), 0, height, 200);
+                    }
+                }, findViewById(R.id.MusicPage), height, 0, 200);
+            }
+        });
+        findViewById(R.id.robotem).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int height=findViewById(R.id.MusicPage).getHeight();
+                AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        findViewById(R.id.MusicPage).setVisibility(View.GONE);
+                        findViewById(R.id.RobotPage).setVisibility(View.VISIBLE);
+                        findViewById(R.id.MinePage).setVisibility(View.GONE);
+                        AnimatorUtil.animHeightToView(null, findViewById(R.id.RobotPage), 0, height, 200);
+                    }
+                }, findViewById(R.id.MusicPage), height, 0, 200);
+            }
+        });
+        findViewById(R.id.rback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int height=findViewById(R.id.RobotPage).getHeight();
+                AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        findViewById(R.id.MusicPage).setVisibility(View.VISIBLE);
+                        findViewById(R.id.RobotPage).setVisibility(View.GONE);
+                        findViewById(R.id.MinePage).setVisibility(View.GONE);
+                        AnimatorUtil.animHeightToView(null, findViewById(R.id.MusicPage), 0, height, 200);
+                    }
+                }, findViewById(R.id.RobotPage), height, 0, 200);
+            }
+        });
+        findViewById(R.id.mback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int height=findViewById(R.id.MinePage).getHeight();
+                AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        findViewById(R.id.MusicPage).setVisibility(View.VISIBLE);
+                        findViewById(R.id.RobotPage).setVisibility(View.GONE);
+                        findViewById(R.id.MinePage).setVisibility(View.GONE);
+                        AnimatorUtil.animHeightToView(null, findViewById(R.id.MusicPage), 0, height, 200);
+                    }
+                }, findViewById(R.id.MinePage), height, 0, 200);
+            }
+        });
         try {
             final RelativeLayout UBG= (RelativeLayout) findViewById(R.id.UBG);
             TextView PTX= (TextView) findViewById(R.id.PTX);
@@ -923,10 +974,10 @@ public class LemonApp extends AppCompatActivity {
             File f=new File(SDPATH+"LemonApp/Cache/"+sps.getString("ivn",""));
             if(f.exists()){
                 if(sps.contains("ivt")){
-                RelativeLayout UBG= (RelativeLayout) findViewById(R.id.UBG);
-                TextView PTX= (TextView) findViewById(R.id.PTX);
-                UBG.setBackground(BitmapDrawable.createFromPath(f.toString()));
-                PTX.setText(sps.getString("ivt",""));
+                    RelativeLayout UBG= (RelativeLayout) findViewById(R.id.UBG);
+                    TextView PTX= (TextView) findViewById(R.id.PTX);
+                    UBG.setBackground(BitmapDrawable.createFromPath(f.toString()));
+                    PTX.setText(sps.getString("ivt",""));
                 }
             }
         }

@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="#0099FF"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/rback"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="28dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#00000000"
+            app:srcCompat="@drawable/icback" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:text="小萌机器人"
             android:textColor="#FFFFFF"
             android:textSize="20dp" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/RobotContent"

@@ -24,6 +24,16 @@
             android:src="@drawable/usertx"
             tools:ignore="VectorDrawableCompat" />
 
+        <ImageButton
+            android:id="@+id/mback"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="28dp"
+            android:background="#00000000"
+            app:srcCompat="@drawable/icback" />
         <TextView
             android:id="@+id/USERNAME"
             android:layout_width="wrap_content"

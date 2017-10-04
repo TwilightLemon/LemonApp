@@ -4,7 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.os.Build;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.RequiresApi;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,3 +39,4 @@ public class AnimatorUtil {
         va.start();
     }
 }
+

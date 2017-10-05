@@ -21,7 +21,7 @@
         android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/MImage"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="100dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -52,8 +52,8 @@
 
         <com.example.twilightlemon.lemonapp.CircleImageView
             android:id="@+id/MUSICZJ"
-            android:layout_width="275dp"
-            android:layout_height="275dp"
+            android:layout_width="245dp"
+            android:layout_height="245dp"
             android:src="@mipmap/icon"
             android:layout_marginTop="15dp"
             android:layout_below="@+id/MusicTextGC"
@@ -61,8 +61,8 @@
 
         <com.example.twilightlemon.lemonapp.LrcView
             android:id="@+id/lrc"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="380dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="350dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:lrcAnimationDuration="500"
@@ -112,29 +112,28 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_height="80dp">
+        android:layout_marginBottom="10dp"
+        android:layout_height="90dp">
 
         <SeekBar
             android:id="@+id/MusicSeek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:progress="20"
             android:maxHeight="3dp"
             android:minHeight="3dp"
             android:progressDrawable="@drawable/seekbarsttyle"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="60dp" />
+            android:layout_marginBottom="70dp" />
 
         <ImageButton
             android:id="@+id/musiclb"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignBottom="@+id/MButton"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/musicnext"
+            android:layout_marginLeft="40dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginRight="20dp"
             android:background="#00000000"
             app:srcCompat="@drawable/ic_musicplay" />
 
@@ -143,10 +142,9 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/MButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="7dp"
-            android:layout_marginLeft="20dp"
+            android:layout_toLeftOf="@+id/musicnexts"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="10dp"
             android:background="#00000000"
             app:srcCompat="@drawable/ic_musiclb" />
 
@@ -156,8 +154,8 @@
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/MButton"
             android:layout_marginBottom="7dp"
-            android:layout_marginEnd="31dp"
-            android:layout_marginRight="31dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
             android:layout_toLeftOf="@+id/MButton"
             android:layout_toStartOf="@+id/MButton"
             android:background="#00000000"
@@ -169,8 +167,8 @@
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/MButton"
             android:layout_marginBottom="7dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             android:layout_toEndOf="@+id/MButton"
             android:layout_toRightOf="@+id/MButton"
             android:background="#00000000"

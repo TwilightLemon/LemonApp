@@ -352,6 +352,7 @@ public class LemonApp extends AppCompatActivity {
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("ItemTitle", name+" "+Q);
                     map.put("ItemText", Singer);
+                    map.put("MusicIndex",i+"");
                     mylist.add(map);
                     i++;
                 }

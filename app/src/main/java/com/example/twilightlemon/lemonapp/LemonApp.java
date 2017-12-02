@@ -192,7 +192,6 @@ public class LemonApp extends AppCompatActivity {
             String Ct=EntityUtils.toString(httpResponse.getEntity(),"utf-8");
             String Ctlyric=Ct.substring(Ct.indexOf("\"lyric\":\"")+9,Ct.indexOf("\",\""));
             lyricdata = new String(Base64.decode(Ctlyric.getBytes(), Base64.DEFAULT));
-            if(!Ct.contains("\"trans\":\"\"")){
             String Cttrans=Ct.substring(Ct.indexOf("\"trans\":\"")+9,Ct.indexOf("\"})"));
             String transdata =new String(Base64.decode(Cttrans.getBytes(), Base64.DEFAULT));
            // SendMessageBox(lyricdata +transdata);
@@ -203,7 +202,7 @@ public class LemonApp extends AppCompatActivity {
             for (String x:dt) {
               parserLine(x,datatimes,datatexs,gcdata);
             }
-            sdm("d1");
+            //sdm("d1");
             ArrayList<String> dataatimes=new ArrayList<String>();
             ArrayList<String> dataatexs=new ArrayList<String>();
             HashMap<String,String> fydata=new HashMap<String, String>();
@@ -244,7 +243,7 @@ public class LemonApp extends AppCompatActivity {
             lrcBig.initEntryList();
             lrcBig.initNextTime();
             lrcBig.onLrcLoaded(list);
-            }
+
         }
         }catch(Exception e){
             SendMessageBox(e.getMessage().toString());}
@@ -283,6 +282,15 @@ public class LemonApp extends AppCompatActivity {
             data.put(TimeData,TexsData);
             return TimeData+"     "+TexsData;
         }else return "";
+    }
+    public LrcEntry parserLine(String str){
+        if (!str.startsWith("[ti:")&&!str.startsWith("[ar:")&&!str.startsWith("[al:")&&!str.startsWith("[by:")&&!str.startsWith("[offset:")){
+            String TimeData=Text(str,"[","]",0,0)+"0";
+            String INFO=Text(str,"[","]",0,1);
+            String io="["+INFO+"]";
+            String TexsData=str.replace(io,"");
+            return new LrcEntry(strToTime(TimeData),TexsData);
+        }else return null;
     }
     public static String Text(String all, String r, String l, int t,int f)
     {
@@ -609,7 +617,7 @@ public class LemonApp extends AppCompatActivity {
 						HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
                         if(httpResponse.getStatusLine().getStatusCode() == 200){
                             String json = EntityUtils.toString(httpResponse.getEntity());
-                            SendMessageBox(json);
+                          //  SendMessageBox(json);
                             JSONObject jo = new JSONObject(json);
                             int i=0;
                             MusicIDData.clear();
@@ -626,7 +634,7 @@ public class LemonApp extends AppCompatActivity {
                                 }
                                 String Singer=isx.substring(0, isx.lastIndexOf("/"));
                                 String MusicID=jos.getString("songmid");
-                                String alert=jos.getJSONObject("action").getString("alert");
+                                String alert="1";
                                 String ImageID=jos.getString("albummid") ;
                                 String Fotmat=jos.getString("sizeflac");
                                 String HQfotmat=jos.getString("size320");

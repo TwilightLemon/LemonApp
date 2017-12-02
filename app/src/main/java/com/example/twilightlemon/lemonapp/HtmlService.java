@@ -30,6 +30,11 @@ public class HtmlService {
         else html = new String(data,"GB18030");
         return html;
     }
+    public static String Fx(String AllText,String z,String y) {
+        String sssString=null;
+        sssString=AllText.substring(z.length()+AllText.indexOf(z), AllText.indexOf(y));
+        return sssString;
+    }
 
     /**
      * 读取输入流，得到html的二进制数据

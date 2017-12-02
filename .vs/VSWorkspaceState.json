@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\app",
+    "\\app\\src",
+    "\\app\\src\\main",
+    "\\app\\src\\main\\res",
+    "\\app\\src\\main\\res\\layout"
   ],
-  "SelectedNode": "\\.idea",
+  "SelectedNode": "\\app\\src\\main\\res\\layout\\activity_lemon_app.xml",
   "PreviewInSolutionExplorer": false
 }

@@ -155,7 +155,7 @@ public class LemonApp extends AppCompatActivity {
                     File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
                     if(f.exists())
                         mediaPlayer.setDataSource(f.toString());
-                    else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
+                    else mediaPlayer.setDataSource(GetMusicUrl.Get(MusicIDData.get(MListSeleindex)));
                     mediaPlayer.prepare();//缓冲
                     mediaPlayer.start();//开始或恢复播放
                 } catch (Exception e) {
@@ -203,7 +203,7 @@ public class LemonApp extends AppCompatActivity {
             for (String x:dt) {
               parserLine(x,datatimes,datatexs,gcdata);
             }
-            //sdm("d1");
+            sdm("d1");
             ArrayList<String> dataatimes=new ArrayList<String>();
             ArrayList<String> dataatexs=new ArrayList<String>();
             HashMap<String,String> fydata=new HashMap<String, String>();
@@ -305,6 +305,7 @@ public class LemonApp extends AppCompatActivity {
         }
 
     }
+    ArrayList<String> MusicActionData=new ArrayList<String>();
     ArrayList<String> MusicIDData=new ArrayList<String>();
     String SDPATH="";
     ArrayList<String> MImageIDData=new ArrayList<String>();
@@ -339,6 +340,7 @@ public class LemonApp extends AppCompatActivity {
                     String Singer=isx.substring(0, isx.lastIndexOf("/"));
                     String MusicID=jos.getString("mid")+"";
                     String ImageID=jos.getJSONObject("album").getString("mid")+"";
+                    String alert=jos.getJSONObject("action").getString("alert")+"";
                     String Fotmat=jos.getJSONObject("file").getString("size_flac")+"";
                     String HQfotmat=jos.getJSONObject("file").getString("size_ogg")+"";
                     String Q="";
@@ -348,6 +350,7 @@ public class LemonApp extends AppCompatActivity {
                         if (Fotmat == "0")
                             Q = "[HQ]";
                     MusicIDData.add(MusicID);
+                    MusicActionData.add(alert);
                     MImageIDData.add(ImageID);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("ItemTitle", name+" "+Q);
@@ -368,7 +371,7 @@ public class LemonApp extends AppCompatActivity {
         try{
         RelativeLayout PATENT= (RelativeLayout)view.getParent();
         int index= Integer.parseInt(((TextView)PATENT.findViewById(R.id.MusicIndex)).getText().toString());
-        String downloadUrl="http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(index)+".m4a?fromtag=52";
+        String downloadUrl=GetMusicUrl.Get(MusicIDData.get(index));
         HashMap<String,String> map=(HashMap<String,String>)list.getItemAtPosition(index);
         String name=(map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a").replace("\\","").replace("/","");
             DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
@@ -463,7 +466,7 @@ public class LemonApp extends AppCompatActivity {
                     File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
                     if(f.exists())
                         mediaPlayer.setDataSource(f.toString());
-                    else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
+                    else mediaPlayer.setDataSource(GetMusicUrl.Get(MusicIDData.get(MListSeleindex)));
                     mediaPlayer.prepare();//缓冲
                     mediaPlayer.start();//开始或恢复播放
                 } catch (Exception e) {
@@ -506,7 +509,7 @@ public class LemonApp extends AppCompatActivity {
                     File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
                     if(f.exists())
                         mediaPlayer.setDataSource(f.toString());
-                    else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100" + MusicIDData.get(MListSeleindex) + ".m4a?fromtag=52");
+                    else mediaPlayer.setDataSource(GetMusicUrl.Get(MusicIDData.get(MListSeleindex)));
                     mediaPlayer.prepare();//缓冲
                     mediaPlayer.start();//开始或恢复播放
                 } catch (Exception e) {
@@ -606,6 +609,7 @@ public class LemonApp extends AppCompatActivity {
 						HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
                         if(httpResponse.getStatusLine().getStatusCode() == 200){
                             String json = EntityUtils.toString(httpResponse.getEntity());
+                            SendMessageBox(json);
                             JSONObject jo = new JSONObject(json);
                             int i=0;
                             MusicIDData.clear();
@@ -622,6 +626,7 @@ public class LemonApp extends AppCompatActivity {
                                 }
                                 String Singer=isx.substring(0, isx.lastIndexOf("/"));
                                 String MusicID=jos.getString("songmid");
+                                String alert=jos.getJSONObject("action").getString("alert");
                                 String ImageID=jos.getString("albummid") ;
                                 String Fotmat=jos.getString("sizeflac");
                                 String HQfotmat=jos.getString("size320");
@@ -632,6 +637,7 @@ public class LemonApp extends AppCompatActivity {
                                     if (Fotmat == "0")
                                         Q = "[HQ]";
                                 MusicIDData.add(MusicID);
+                                MusicActionData.add(alert);
                                 MImageIDData.add(ImageID);
                                 HashMap<String, String> map = new HashMap<String, String>();
                                 map.put("ItemTitle", name+" "+Q);
@@ -663,12 +669,14 @@ public class LemonApp extends AppCompatActivity {
                 findViewById(R.id.MSearch).setVisibility(View.VISIBLE);
                 View vHead = findViewById(R.id.MSearchBar);
                 AnimatorUtil.animHeightToView(null,vHead, 0, 900,150);
+                AnimatorUtil.animop(findViewById(R.id.MSearchTouchBar),0f,1f,150);
             }
         });
         findViewById(R.id.MSearchTouchBar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View vHead = findViewById(R.id.MSearchBar);
+                AnimatorUtil.animop(findViewById(R.id.MSearchTouchBar),1f,0f,150);
                 AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -711,7 +719,7 @@ public class LemonApp extends AppCompatActivity {
                                 downloadManager.enqueue(request);
                                 return null;
                             }
-                        }.execute(new String[]{"http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(i)+".m4a?fromtag=52",(map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a").replace("\\","").replace("/","")});
+                        }.execute(new String[]{GetMusicUrl.Get(MusicIDData.get(i)),(map.get("ItemTitle").replace("[SQ]","").replace("[HQ]","")+"-"+map.get("ItemText")+".m4a").replace("\\","").replace("/","")});
                     }
                 }
             }
@@ -761,6 +769,7 @@ public class LemonApp extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2,
                                     long arg3) {
+                AnimatorUtil.animop(findViewById(R.id.MSearchTouchBar),1f,0f,150);
                 View vHead = findViewById(R.id.MSearchBar);
                 AnimatorUtil.animHeightToView(new AnimatorListenerAdapter() {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -793,10 +802,20 @@ public class LemonApp extends AppCompatActivity {
                             MListSeleindex=arg2;
                             mediaPlayer.stop();
                             mediaPlayer=new MediaPlayer();
-                            File f=new File(SDPATH+"LemonApp/MusicDownload/"+MusicText.getText()+"-"+MusicTextGC.getText()+".m4a");
-                            if(f.exists())
-                                mediaPlayer.setDataSource(f.toString());
-                            else mediaPlayer.setDataSource("http://cc.stream.qqmusic.qq.com/C100"+MusicIDData.get(arg2)+".m4a?fromtag=52");
+                            if(MusicActionData.get(arg2)!="0") {
+                                File f = new File(SDPATH + "LemonApp/MusicDownload/" + MusicText.getText() + "-" + MusicTextGC.getText() + ".mp3");
+                                if (f.exists())
+                                    mediaPlayer.setDataSource(f.toString());
+                                else{
+                                    mediaPlayer.setDataSource(GetMusicUrl.Get(MusicIDData.get(arg2)));
+                                }
+                            }else{
+                                File f = new File(SDPATH + "LemonApp/MusicDownload/" + MusicText.getText() + "-" + MusicTextGC.getText() + ".m4a");
+                                if (f.exists())
+                                    mediaPlayer.setDataSource(f.toString());
+                                else
+                                    mediaPlayer.setDataSource(GetMusicUrl.Get(MusicIDData.get(arg2)));
+                            }
                             mediaPlayer.prepare();//缓冲
                             mediaPlayer.start();//开始或恢复播放
                         }catch(Exception e){SendMessageBox(e.getMessage());}

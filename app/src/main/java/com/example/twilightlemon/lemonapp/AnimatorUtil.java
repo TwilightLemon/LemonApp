@@ -16,6 +16,7 @@ import android.support.annotation.RequiresApi;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.DecelerateInterpolator;
 
 public class AnimatorUtil {
@@ -37,6 +38,11 @@ public class AnimatorUtil {
            va.addListener(ds);
         va.setDuration(duration);
         va.start();
+    }
+    public static void animop(View v,float f,float t,int d){
+        AlphaAnimation alphaAnimation = new AlphaAnimation(f, t);
+        alphaAnimation.setDuration(d);
+        v.startAnimation(alphaAnimation);
     }
 }
 

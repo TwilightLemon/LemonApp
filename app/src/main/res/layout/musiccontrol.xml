@@ -185,88 +185,90 @@
             app:srcCompat="@drawable/ic_music_close" />
     </RelativeLayout>
      </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/MSearch"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
 
         <RelativeLayout
-            android:id="@+id/MSearchTouchBar"
+            android:id="@+id/MSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF" />
-
-        <RelativeLayout
-            android:id="@+id/MSearchBar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="#FFFFFF"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:visibility="visible">
-
-                <ImageButton
-                    android:id="@+id/MGDButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginRight="45dp"
-                    android:layout_marginTop="6dp"
-                    android:background="#FAFAFA"
-                    android:onClick="MusicDownloadOnClick"
-                    app:srcCompat="@drawable/s" />
-
-                <ImageButton
-                    android:id="@+id/MDownloadALL"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="6dp"
-                    android:background="#FAFAFA"
-                    android:onClick="MusicDownloadOnClick"
-                    app:srcCompat="@drawable/downloadicon" />
-
-                <EditText
-                    android:id="@+id/music_search"
-                    android:layout_width="fill_parent"
-                    android:layout_height="36dip"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@+id/MGDButton"
-                    android:layout_toStartOf="@+id/MGDButton"
-                    android:hint="搜索"
-                    android:imeOptions="actionDone"
-                    android:padding="5dip"
-                    android:singleLine="true"
-                    android:textColorHint="#AAAAAA"
-                    android:textSize="15dip" />
-            </RelativeLayout>
-
-            <ListView
-                android:id="@+id/music_List"
+                android:id="@+id/MSearchTouchBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:choiceMode="singleChoice"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="visible" />
+                android:background="#40000000" />
 
+            <RelativeLayout
+                android:id="@+id/MSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="#303234"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:visibility="visible">
+
+                    <ImageButton
+                        android:id="@+id/MGDButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="45dp"
+                        android:layout_marginTop="6dp"
+                        android:background="#00AAAAAA"
+                        android:onClick="MusicDownloadOnClick"
+                        app:srcCompat="@drawable/s" />
+
+                    <ImageButton
+                        android:id="@+id/MDownloadALL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="6dp"
+                        android:background="#00AAAAAA"
+                        android:onClick="MusicDownloadOnClick"
+                        app:srcCompat="@drawable/downloadicon" />
+
+                    <EditText
+                        android:id="@+id/music_search"
+                        android:layout_width="fill_parent"
+                        android:layout_height="36dip"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/MGDButton"
+                        android:layout_toStartOf="@+id/MGDButton"
+                        android:hint="搜索"
+                        android:imeOptions="actionDone"
+                        android:padding="5dip"
+                        android:singleLine="true"
+                        android:textColor="#AAAAAA"
+                        android:textColorHint="#AAAAAA"
+                        android:textSize="15dip" />
+                </RelativeLayout>
+
+                <ListView
+                    android:id="@+id/music_List"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:choiceMode="singleChoice"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

@@ -54,6 +54,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -120,13 +121,10 @@ public class LemonApp extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         public void run ( ) {
             if(mediaPlayer.isPlaying()==false) {
-                Toast.makeText(getApplicationContext(), "UUUUHHHMM",
-                        Toast.LENGTH_SHORT).show();
                 handler.removeCallbacks(runnable);
                 if(xhindex[0]==0)
                    MListSeleindex++;
                 list.setItemChecked(MListSeleindex, true);
-                //获得选中项的HashMap对象
                 MseekBar.setProgress(0);
                 lrcBig.updateTime(0);
                 HashMap<String, String> map = (HashMap<String, String>) list.getItemAtPosition(MListSeleindex);
@@ -435,15 +433,21 @@ public class LemonApp extends AppCompatActivity {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.reset();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
         }
         findViewById(R.id.musicnexts).setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "UUUUHHHMM",
-                        Toast.LENGTH_SHORT).show();
                 handler.removeCallbacks(runnable);
                 MListSeleindex--;
                 list.setItemChecked(MListSeleindex, true);
@@ -851,7 +855,7 @@ public class LemonApp extends AppCompatActivity {
             String data = HtmlService.getHtml("http://git.oschina.net/TwilightLemon/Updata/raw/master/AndroidUpdata.au",true);
             final Double v=Double.parseDouble(Text(data,"-","-",0,1));
             String c="       "+Text(data,"+","+",0,1).replace(".","\n");
-            if(1.3<v){
+            if(1.4<v){
                 final TextView tv=new TextView(this);
                 tv.setText("       新版本:"+v+"\n"+c);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(LemonApp.this);

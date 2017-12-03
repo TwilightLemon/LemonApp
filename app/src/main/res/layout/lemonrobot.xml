@@ -7,31 +7,21 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         android:background="#0099FF"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/rback"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="28dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="35dp"
             android:background="#00000000"
             app:srcCompat="@drawable/icback" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="30dp"
-            android:layout_weight="1"
-            android:text="小萌机器人"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp" />
     </RelativeLayout>
 
     <ListView
